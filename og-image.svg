@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="10%" r="85%">
+      <stop offset="0" stop-color="#243019"/>
+      <stop offset=".6" stop-color="#0c100d"/>
+      <stop offset="1" stop-color="#080a09"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <circle cx="990" cy="90" r="310" fill="#b8ff53" opacity=".035"/>
+  <rect x="70" y="70" width="72" height="72" rx="20" fill="#b8ff53" fill-opacity=".1" stroke="#b8ff53" stroke-opacity=".5"/>
+  <text x="106" y="116" fill="#b8ff53" font-family="Arial, sans-serif" font-size="22" font-weight="800" text-anchor="middle">YF</text>
+  <text x="172" y="103" fill="#f1f4f2" font-family="Arial, sans-serif" font-size="24" font-weight="800" letter-spacing="2">YAMAE.FILM</text>
+  <text x="172" y="130" fill="#7f8982" font-family="Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="4">THREADS FILM ARCHIVE</text>
+  <text x="70" y="320" fill="#f1f4f2" font-family="Arial, sans-serif" font-size="78" font-weight="800">EVERY FRAME.</text>
+  <text x="70" y="402" fill="#eaffbc" font-family="Arial, sans-serif" font-size="78" font-weight="800">ONE ARCHIVE.</text>
+  <line x1="70" y1="480" x2="1130" y2="480" stroke="#ffffff" stroke-opacity=".12"/>
+  <text x="70" y="535" fill="#929a95" font-family="Arial, sans-serif" font-size="18" letter-spacing="2">AI FILM · ANIMATION · VISUAL EXPERIMENT</text>
+  <text x="1130" y="535" fill="#b8ff53" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="end">@yamae.film</text>
+</svg>

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#080a09" />
+    <meta
+      name="description"
+      content="YAMAE.FILM이 Threads에 기록한 공개 AI 영상과 제작 실험을 최신 영상부터 감상하는 아카이브."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="YAMAE.FILM — Threads Film Archive" />
+    <meta
+      property="og:description"
+      content="매일 만든 장면과 실험을 최신 영상부터 감상하세요. 번호는 과거 날짜 기준으로 이어집니다."
+    />
+    <meta property="og:image" content="./og-image.svg" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://www.threads.com" />
+    <link rel="preconnect" href="https://www.threads.net" />
+    <title>YAMAE.FILM — Threads Film Archive</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./posts.js" defer></script>
+    <script src="./app-v2.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#archive">아카이브로 바로가기</a>
+
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="YAMAE.FILM 홈">
+        <span class="brand-mark" aria-hidden="true">YF</span>
+        <span class="brand-copy">
+          <strong>YAMAE.FILM</strong>
+          <small>THREADS FILM ARCHIVE</small>
+        </span>
+      </a>
+      <nav class="header-actions" aria-label="외부 링크">
+        <a
+          class="icon-link"
+          href="https://www.threads.com/@yamae.film"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Threads 프로필 열기"
+        >
+          <span aria-hidden="true">@</span>
+          <span class="desktop-only">Threads</span>
+        </a>
+        <a
+          class="icon-link"
+          href="https://www.youtube.com/@YAMAE_FILM"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="YouTube 채널 열기"
+        >
+          <span class="play-icon" aria-hidden="true"></span>
+          <span class="desktop-only">YouTube</span>
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <p class="eyebrow"><span></span> COMPLETE THREADS ARCHIVE</p>
+        <h1 id="hero-title">
+          매일 만든 장면들,<br />
+          <em>한 편의 아카이브로.</em>
+        </h1>
+        <p class="hero-description">
+          완성본보다 실험과 과정이 더 많이 쌓이는 곳.<br />
+          최신 영상부터 보고, 번호는 과거 날짜 기준으로 이어집니다.
+        </p>
+
+        <div class="hero-stats" aria-label="아카이브 통계">
+          <div class="stat">
+            <strong id="total-count">—</strong>
+            <span>전체 영상</span>
+          </div>
+          <div class="stat">
+            <strong id="date-range">—</strong>
+            <span>기록 기간</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="archive-shell" id="archive" aria-labelledby="archive-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">CHRONOLOGICAL COLLECTION</p>
+            <h2 id="archive-title">필름 아카이브</h2>
+          </div>
+          <p>
+            첫 화면은 최신 영상부터 표시됩니다.<br />
+            번호 001은 가장 오래된 공개 영상입니다.
+          </p>
+        </div>
+
+        <div class="toolbar" role="search">
+          <label class="search-box">
+            <span class="search-icon" aria-hidden="true"></span>
+            <span class="sr-only">번호 또는 날짜 검색</span>
+            <input
+              id="search-input"
+              type="search"
+              inputmode="search"
+              autocomplete="off"
+              placeholder="번호·날짜·게시물 코드 검색"
+            />
+            <kbd>/</kbd>
+          </label>
+
+          <div class="segmented" aria-label="정렬 순서">
+            <button class="segment" type="button" data-sort="asc">
+              과거부터
+            </button>
+            <button class="segment is-active" type="button" data-sort="desc">
+              최신부터
+            </button>
+          </div>
+
+
+        </div>
+
+        <div class="results-meta" aria-live="polite">
+          <span><b id="shown-count">0</b>개의 영상</span>
+          <span class="results-line" aria-hidden="true"></span>
+          <span id="sort-label">최신 순</span>
+        </div>
+
+        <div class="film-grid" id="film-grid"></div>
+
+        <div class="empty-state" id="empty-state" hidden>
+          <span>⌕</span>
+          <strong>영상 검색 결과가 없습니다.</strong>
+          <p>다른 번호나 날짜로 다시 찾아보세요.</p>
+        </div>
+
+        <div class="load-zone" id="load-zone" aria-live="polite">
+          <div class="loader" aria-hidden="true"><i></i><i></i><i></i></div>
+          <span id="load-status">다음 기록을 준비하고 있습니다</span>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-brand">
+        <span class="brand-mark small" aria-hidden="true">YF</span>
+        <div>
+          <strong>YAMAE.FILM</strong>
+          <p>AI FILM · ANIMATION · VISUAL EXPERIMENT</p>
+        </div>
+      </div>
+      <p class="footer-note">
+        영상과 게시물의 저작권은 YAMAE.FILM에 있습니다.<br />
+        원본 콘텐츠는 Threads 링크를 통해 제공됩니다.<br />
+        현재 공개 상태인 영상만 아카이브에 표시합니다.
+      </p>
+      <a
+        class="footer-link"
+        href="https://www.threads.com/@yamae.film"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        @yamae.film <span aria-hidden="true">↗</span>
+      </a>
+    </footer>
+
+    <button class="back-to-top" id="back-to-top" type="button" aria-label="맨 위로">
+      ↑
+    </button>
+
+    <template id="film-card-template">
+      <article class="film-card">
+        <header class="card-header">
+          <div class="number-wrap">
+            <span>FILM</span>
+            <strong class="film-number">001</strong>
+          </div>
+          <time class="film-date"></time>
+          <a
+            class="original-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Threads 원문 열기"
+          >
+            원문 <span aria-hidden="true">↗</span>
+          </a>
+        </header>
+        <div class="embed-shell">
+          <a class="embed-placeholder" target="_blank" rel="noopener noreferrer">
+            <span class="pulse-mark">@</span>
+            <p>THREADS FILM</p>
+            <small>불러오는 중 · 원문 열기</small>
+          </a>
+          <div class="embed-mount"></div>
+        </div>
+        <footer class="card-footer">
+          <span class="media-badge">THREADS MEDIA</span>
+          <button class="copy-link" type="button">링크 복사</button>
+        </footer>
+      </article>
+    </template>
+  </body>
+</html>
