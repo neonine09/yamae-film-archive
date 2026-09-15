@@ -1,5 +1,12 @@
 # YAMAE.FILM — Threads Film Archive
 
+## 새 영상 간편 추가
+
+[▶ 새 Threads 게시물 추가](https://github.com/neonine09/yamae-film-archive/actions/workflows/add-thread-post.yml)
+
+위 버튼을 열고 `Run workflow`를 누른 다음, `@yamae.film`의 Threads 게시물 링크를 붙여넣으면 본문·썸네일·번호와 사이트 배포가 자동으로 처리됩니다.
+
+
 YAMAE.FILM의 공개 Threads 영상 게시물만 모아 최신 영상부터 감상하는 다크모드 아카이브입니다. 번호는 과거 날짜 기준으로 연속 부여됩니다.
 
 ## 주요 기능

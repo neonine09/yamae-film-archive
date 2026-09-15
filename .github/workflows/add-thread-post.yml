@@ -1,0 +1,49 @@
+name: 새 Threads 게시물 추가
+
+on:
+  workflow_dispatch:
+    inputs:
+      post_url:
+        description: "YAMAE.FILM Threads 게시물 링크"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: yamae-add-thread-post
+  cancel-in-progress: false
+
+jobs:
+  add-post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: 사이트 불러오기
+        uses: actions/checkout@v4
+
+      - name: Node.js 준비
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: 게시물 정보와 썸네일 추가
+        env:
+          THREADS_POST_URL: ${{ inputs.post_url }}
+        run: node scripts/add-thread-post.mjs
+
+      - name: 변경사항 저장 및 사이트 배포
+        shell: bash
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain --untracked-files=normal)" ]; then
+            echo "이미 등록된 게시물입니다." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- posts.js post-meta.json thumbs/
+          git commit -m "Add Threads post from updater"
+          git push
+          echo "새 Threads 게시물을 추가하고 사이트 배포를 시작했습니다." >> "$GITHUB_STEP_SUMMARY"
