@@ -99,25 +99,23 @@ input:focus-visible {
 }
 
 .brand-mark {
-  display: grid;
-  width: 39px;
-  height: 39px;
-  place-items: center;
-  border: 1px solid rgba(184, 255, 83, 0.5);
-  border-radius: 12px;
-  background: linear-gradient(145deg, rgba(184, 255, 83, 0.17), rgba(184, 255, 83, 0.02));
-  color: var(--accent);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  box-shadow: inset 0 0 18px rgba(184, 255, 83, 0.04);
+  display: block;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 0 12px rgba(184, 255, 83, 0.2));
+}
+
+.brand-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .brand-mark.small {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  font-size: 10px;
+  width: 42px;
+  height: 42px;
 }
 
 .brand-copy {
@@ -860,7 +858,25 @@ footer {
   }
 
   .site-header {
-    min-height: 70px;
+    min-height: 76px;
+  }
+
+  .brand {
+    gap: 9px;
+  }
+
+  .brand-mark {
+    width: 48px;
+    height: 48px;
+  }
+
+  .brand-copy strong {
+    font-size: 12px;
+  }
+
+  .brand-copy small {
+    font-size: 7px;
+    letter-spacing: 0.13em;
   }
 
   .desktop-only {
