@@ -1393,3 +1393,68 @@ body.modal-open { overflow: hidden; }
     transform: translateX(-10px);
   }
 }
+/* Single-card hover preview test: latest post only. */
+@media (hover: hover) and (min-width: 621px) {
+  .has-hover-preview .tile-quick-info {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    z-index: 3;
+    display: flex;
+    min-height: 66%;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 34px 12px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 11px;
+    background: linear-gradient(180deg, rgba(9, 13, 10, 0.16), rgba(9, 13, 10, 0.96) 40%);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34);
+    text-align: left;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 190ms ease, transform 240ms cubic-bezier(.2,.7,.2,1);
+    pointer-events: none;
+  }
+
+  .has-hover-preview .tile-quick-kicker {
+    color: var(--accent);
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+  }
+
+  .has-hover-preview .tile-quick-copy {
+    display: -webkit-box;
+    margin-top: 7px;
+    overflow: hidden;
+    color: #f2f6f3;
+    font-size: 10px;
+    font-weight: 650;
+    line-height: 1.48;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .has-hover-preview .tile-quick-action {
+    margin-top: 8px;
+    color: #aeb7b0;
+    font-size: 8px;
+    font-weight: 700;
+  }
+
+  .has-hover-preview .tile-quick-action b { color: var(--accent); }
+  .has-hover-preview .tile-caption { display: none; }
+  .has-hover-preview .tile-preview:hover .tile-quick-info,
+  .has-hover-preview .tile-preview:focus-visible .tile-quick-info {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .has-hover-preview .tile-preview:hover .tile-play,
+  .has-hover-preview .tile-preview:focus-visible .tile-play {
+    opacity: 0;
+    transform: translate(-50%, -62%) scale(0.84);
+  }
+  .has-hover-preview .tile-preview:hover .tile-hover-label,
+  .has-hover-preview .tile-preview:focus-visible .tile-hover-label { opacity: 0; }
+}

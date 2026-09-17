@@ -24,6 +24,7 @@
       caption: "",
     }));
   const postByCode = new Map(posts.map((post) => [post.code, post]));
+  const latestPostCode = posts.at(-1)?.code || "";
 
   const grid = document.querySelector("#film-grid");
   const loadZone = document.querySelector("#load-zone");
@@ -167,9 +168,11 @@
 
   function updateTileCaption(article, post) {
     const captionEl = article.querySelector(".tile-caption");
+    const quickCopy = article.querySelector(".tile-quick-copy");
     const caption = captionFor(post);
     captionEl.textContent = caption;
     captionEl.hidden = !caption;
+    if (quickCopy) quickCopy.textContent = caption || "게시물 내용을 불러오는 중입니다.";
   }
 
   function makeTile(post) {
@@ -177,11 +180,20 @@
     article.className = "film-card film-tile";
     article.id = `film-${postNumber(post)}`;
     article.dataset.code = post.code;
+    const isHoverPreviewTest = post.code === latestPostCode;
+    article.classList.toggle("has-hover-preview", isHoverPreviewTest);
+    const hoverPreviewMarkup = isHoverPreviewTest ? `
+      <span class="tile-quick-info" aria-hidden="true">
+        <span class="tile-quick-kicker">내용 미리보기</span>
+        <span class="tile-quick-copy">게시물 내용을 불러오는 중입니다.</span>
+        <span class="tile-quick-action">클릭하면 영상 재생 <b>↗</b></span>
+      </span>` : "";
     article.innerHTML = `
       <button class="tile-preview" type="button" aria-label="FILM ${postNumber(post)} 미리보기 열기">
         <img loading="lazy" alt="FILM ${postNumber(post)} 영상 썸네일" />
         <span class="tile-shade"></span>
         <span class="tile-index">${postNumber(post)}</span>
+        ${hoverPreviewMarkup}
         <span class="tile-play"><i></i></span>
         <span class="tile-hover-label">미리보기</span>
       </button>
