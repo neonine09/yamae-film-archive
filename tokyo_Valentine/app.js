@@ -18,6 +18,9 @@
   let visible = 0;
   let filtered = [];
   let active = null;
+  let blobUrl = "";
+  let videoRequest = null;
+  let videoLoadId = 0;
 
   const modal = document.createElement("div");
   modal.className = "preview-modal";
@@ -53,9 +56,54 @@
     const video = modal.querySelector("video");
     $(".video-error").hidden = true;
     video.poster = post.thumbnail;
-    video.src = post.video;
-    video.load();
+    void loadVideo(post);
     setTimeout(() => $(".modal-close")?.focus(), 0);
+  }
+
+  function clearVideo() {
+    videoLoadId += 1;
+    videoRequest?.abort();
+    videoRequest = null;
+    const video = modal.querySelector("video");
+    video.pause();
+    video.removeAttribute("src");
+    video.load();
+    if (blobUrl) {
+      URL.revokeObjectURL(blobUrl);
+      blobUrl = "";
+    }
+  }
+
+  async function loadVideo(post) {
+    const video = modal.querySelector("video");
+    const requestId = ++videoLoadId;
+    videoRequest?.abort();
+    videoRequest = new AbortController();
+    video.removeAttribute("src");
+    video.load();
+
+    try {
+      const response = await fetch(post.video, {
+        headers: { Range: "bytes=0-" },
+        mode: "cors",
+        referrerPolicy: "no-referrer",
+        signal: videoRequest.signal
+      });
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const blob = await response.blob();
+      if (requestId !== videoLoadId || !active) return;
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+      blobUrl = URL.createObjectURL(blob);
+      video.src = blobUrl;
+      video.load();
+    } catch (error) {
+      if (error.name === "AbortError" || requestId !== videoLoadId || !active) return;
+      video.src = post.video;
+      video.load();
+      $(".video-error").hidden = false;
+    } finally {
+      if (requestId === videoLoadId) videoRequest = null;
+    }
   }
 
   function close() {
@@ -64,10 +112,7 @@
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("modal-open");
-    const video = modal.querySelector("video");
-    video.pause();
-    video.removeAttribute("src");
-    video.load();
+    clearVideo();
   }
 
   function tile(post) {
