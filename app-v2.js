@@ -24,7 +24,6 @@
       caption: "",
     }));
   const postByCode = new Map(posts.map((post) => [post.code, post]));
-  const latestPostCode = posts.at(-1)?.code || "";
 
   const grid = document.querySelector("#film-grid");
   const loadZone = document.querySelector("#load-zone");
@@ -180,14 +179,13 @@
     article.className = "film-card film-tile";
     article.id = `film-${postNumber(post)}`;
     article.dataset.code = post.code;
-    const isHoverPreviewTest = post.code === latestPostCode;
-    article.classList.toggle("has-hover-preview", isHoverPreviewTest);
-    const hoverPreviewMarkup = isHoverPreviewTest ? `
+    article.classList.add("has-hover-preview");
+    const hoverPreviewMarkup = `
       <span class="tile-quick-info" aria-hidden="true">
         <span class="tile-quick-kicker">내용 미리보기</span>
         <span class="tile-quick-copy">게시물 내용을 불러오는 중입니다.</span>
         <span class="tile-quick-action">클릭하면 영상 재생 <b>↗</b></span>
-      </span>` : "";
+      </span>`;
     article.innerHTML = `
       <button class="tile-preview" type="button" aria-label="FILM ${postNumber(post)} 미리보기 열기">
         <img loading="lazy" alt="FILM ${postNumber(post)} 영상 썸네일" />

@@ -1393,7 +1393,7 @@ body.modal-open { overflow: hidden; }
     transform: translateX(-10px);
   }
 }
-/* Single-card hover preview test: latest post only. */
+/* Whole-card hover preview for every film post. */
 @media (hover: hover) and (min-width: 621px) {
   .has-hover-preview .tile-quick-info {
     position: absolute;
