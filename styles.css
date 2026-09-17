@@ -1445,16 +1445,16 @@ body.modal-open { overflow: hidden; }
 
   .has-hover-preview .tile-quick-action b { color: var(--accent); }
   .has-hover-preview .tile-caption { display: none; }
-  .has-hover-preview .tile-preview:hover .tile-quick-info,
-  .has-hover-preview .tile-preview:focus-visible .tile-quick-info {
+  .has-hover-preview:hover .tile-quick-info,
+  .has-hover-preview:focus-within .tile-quick-info {
     opacity: 1;
     transform: translateY(0);
   }
-  .has-hover-preview .tile-preview:hover .tile-play,
-  .has-hover-preview .tile-preview:focus-visible .tile-play {
+  .has-hover-preview:hover .tile-play,
+  .has-hover-preview:focus-within .tile-play {
     opacity: 0;
     transform: translate(-50%, -62%) scale(0.84);
   }
-  .has-hover-preview .tile-preview:hover .tile-hover-label,
-  .has-hover-preview .tile-preview:focus-visible .tile-hover-label { opacity: 0; }
+  .has-hover-preview:hover .tile-hover-label,
+  .has-hover-preview:focus-within .tile-hover-label { opacity: 0; }
 }
