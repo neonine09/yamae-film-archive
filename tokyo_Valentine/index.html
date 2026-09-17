@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#07090d" />
+    <meta name="description" content="とすくん(@tokyo_Valentine)의 공개 X AI 영상 로컬 아카이브." />
+    <link rel="preconnect" href="https://pbs.twimg.com" />
+    <link rel="preconnect" href="https://video.twimg.com" />
+    <title>とすくん — X Film Archive</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./posts.js" defer></script>
+    <script src="./posts-extra-a.js" defer></script>
+    <script src="./posts-extra-b.js" defer></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#archive">아카이브로 바로가기</a>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="tokyo Valentine 홈">
+        <span class="brand-mark">TV</span>
+        <span class="brand-copy"><strong>TOKYO VALENTINE</strong><small>X FILM ARCHIVE</small></span>
+      </a>
+      <nav class="header-actions" aria-label="외부 링크">
+        <a class="icon-link" href="https://x.com/tokyo_Valentine" target="_blank" rel="noopener noreferrer" aria-label="X 프로필 열기"><span class="x-mark">𝕏</span><span class="desktop-only">X 프로필</span></a>
+        <a class="icon-link" href="https://tosu-designer.com/" target="_blank" rel="noopener noreferrer" aria-label="공식 사이트 열기"><span>↗</span><span class="desktop-only">공식 사이트</span></a>
+      </nav>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-banner" aria-hidden="true"><img src="https://pbs.twimg.com/profile_banners/766822705832206336/1789495164/1500x500" alt="" /></div>
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="profile-line">
+          <img class="profile-avatar" src="https://pbs.twimg.com/profile_images/2051164845891047424/J96Yb88U_400x400.jpg" alt="とすくん 프로필 이미지" />
+          <div class="profile-copy"><strong>とすくん</strong><span>@tokyo_Valentine</span></div>
+        </div>
+        <p class="eyebrow"><span></span> X FILM ARCHIVE · LOCAL ONLY</p>
+        <h1 id="hero-title">만든 장면들을,<br /><em>한 편의 아카이브로.</em></h1>
+        <p class="hero-description">공개 X 프로필에서 확인된 최신 AI 영상들을<br />번호와 날짜 순서로 정리한 로컬 전용 페이지입니다.</p>
+        <div class="hero-stats" aria-label="아카이브 통계">
+          <div class="stat"><strong id="total-count">—</strong><span>전체 영상</span></div>
+          <div class="stat"><strong id="date-range">—</strong><span>기록 기간</span></div>
+          <div class="stat local-stat"><strong>LOCAL</strong><span>배포하지 않음</span></div>
+        </div>
+        <p class="snapshot-note">현재 공개 페이지에서 확인된 최신 영상 스냅샷 · 2026.09.16 기준</p>
+      </section>
+      <section class="archive-shell" id="archive" aria-labelledby="archive-title">
+        <div class="section-heading">
+          <div><p class="section-kicker">CHRONOLOGICAL X COLLECTION</p><h2 id="archive-title">X 필름 아카이브</h2></div>
+          <p>첫 화면은 최신 영상부터 표시됩니다.<br />번호 001은 가장 오래된 영상입니다.</p>
+        </div>
+        <div class="toolbar" role="search">
+          <label class="search-box"><span class="search-icon" aria-hidden="true"></span><span class="sr-only">번호 또는 날짜 검색</span><input id="search-input" type="search" autocomplete="off" placeholder="번호·날짜·게시물 코드 검색" /><kbd>/</kbd></label>
+          <div class="segmented" aria-label="정렬 순서"><button class="segment" type="button" data-sort="asc">과거부터</button><button class="segment is-active" type="button" data-sort="desc">최신부터</button></div>
+        </div>
+        <div class="results-meta" aria-live="polite"><span><b id="shown-count">0</b>개의 영상</span><span class="results-line" aria-hidden="true"></span><span id="sort-label">최신 순</span></div>
+        <div class="film-grid" id="film-grid"></div>
+        <div class="empty-state" id="empty-state" hidden><span>⌕</span><strong>영상 검색 결과가 없습니다.</strong><p>다른 번호나 날짜로 다시 찾아보세요.</p></div>
+        <div class="load-zone" id="load-zone" aria-live="polite"><div class="loader" aria-hidden="true"><i></i><i></i><i></i></div><span id="load-status">다음 기록을 준비하고 있습니다</span></div>
+      </section>
+    </main>
+    <footer>
+      <div class="footer-brand"><span class="brand-mark small">TV</span><div><strong>TOKYO VALENTINE</strong><p>AI VIDEO · AI ILLUSTRATION · VISUAL EXPERIMENT</p></div></div>
+      <p class="footer-note">영상과 게시물의 저작권은 원작자에게 있습니다.<br />영상은 X 공개 미디어 링크를 통해 재생됩니다.<br />이 페이지는 이 컴퓨터에서만 사용하는 로컬 아카이브입니다.</p>
+      <a class="footer-link" href="https://x.com/tokyo_Valentine" target="_blank" rel="noopener noreferrer">@tokyo_Valentine <span>↗</span></a>
+    </footer>
+    <button class="back-to-top" id="back-to-top" type="button" aria-label="맨 위로">↑</button>
+  </body>
+</html>
