@@ -152,7 +152,7 @@
     updateModalDetails(post);
     const iframe = modal.querySelector("iframe");
     iframe.title = `FILM ${postNumber(post)} Threads 영상 플레이어`;
-    iframe.src = `${post.url}/embed/`;
+    iframe.src = `${post.url}/embed/?hidecaption=1`;
     window.setTimeout(() => modal.querySelector(".modal-close")?.focus(), 0);
   }
 

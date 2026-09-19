@@ -180,6 +180,39 @@ footer{justify-content:space-between;gap:35px;border-top:1px solid var(--line);p
     transform: translateX(-10px);
   }
 }
+
+/* Click preview split layout, matching the Tokyo archive dialog. */
+.preview-modal .modal-panel { width: min(820px, 100%); max-height: calc(100vh - 56px); overflow: auto; }
+.preview-modal .modal-content { display: grid; grid-template-columns: minmax(0, 1.34fr) minmax(250px, .66fr); align-items: stretch; gap: 0; padding: 0; border-top: 1px solid var(--line); }
+.preview-modal .modal-player { align-items: stretch; min-width: 0; min-height: 0; width: auto; margin: 0; border: 0; border-right: 1px solid var(--line); }
+.preview-modal .modal-player-top { width: 100%; }
+.preview-modal .modal-player iframe { display: block; width: 100%; max-width: none; height: min(58vh, 420px); min-height: 320px; flex: none; margin: 0; transform: none; border: 0; background: #080b10; }
+.preview-modal .modal-details { display: flex; min-width: 0; flex-direction: column; margin: 0; border: 0; border-radius: 0; background: transparent; padding: 22px 22px 24px; }
+.preview-modal .modal-details-top, .preview-modal .modal-details-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.preview-modal .modal-details-label, .preview-modal .modal-details-type { color: var(--accent); font-size: 9px; font-weight: 800; letter-spacing: .15em; }
+.preview-modal .modal-details-type { color: #7e898a; }
+.preview-modal .modal-caption { margin: 16px 0 18px; overflow-wrap: anywhere; color: #e6ece7; font-size: 12px; line-height: 1.75; white-space: pre-wrap; }
+.preview-modal .modal-caption.is-empty { color: #8e9991; }
+.preview-modal .modal-details-meta { align-items: flex-start; flex-direction: column; margin-top: auto; border-top: 1px solid var(--line); padding-top: 13px; }
+.preview-modal .modal-details-meta .modal-code, .preview-modal .modal-details-meta .modal-date-bottom { color: #87928a; font-size: 10px; letter-spacing: .04em; overflow-wrap: anywhere; }
+.preview-modal .modal-original { display: inline-flex; align-self: flex-start; margin-top: 18px; border-radius: 8px; background: var(--accent-soft); padding: 10px 12px; color: var(--warm); font-size: 10px; font-weight: 800; }
+@media (max-width: 850px) {
+  .preview-modal .modal-content { grid-template-columns: minmax(0, 1fr); }
+  .preview-modal .modal-player { border-right: 0; border-bottom: 1px solid var(--line); }
+  .preview-modal .modal-player iframe { height: min(54vh, 410px); min-height: 280px; }
+  .preview-modal .modal-details { padding: 20px 24px 24px; }
+}
+@media (max-width: 620px) {
+  .preview-modal { padding: 10px; }
+  .preview-modal .modal-panel { max-height: calc(100vh - 20px); border-radius: 16px; }
+  .preview-modal .modal-heading { padding: 20px 19px 15px; }
+  .preview-modal .modal-heading h2 { font-size: 17px; }
+  .preview-modal .modal-heading > time { font-size: 9px; }
+  .preview-modal .modal-player iframe { height: min(50vh, 360px); min-height: 240px; }
+  .preview-modal .modal-details { padding: 17px 18px 19px; }
+  .preview-modal .modal-caption { margin: 12px 0 16px; font-size: 12px; line-height: 1.6; }
+  .preview-modal .modal-details-meta { margin-top: 8px; }
+}
 /* YAMAE branding and profile banner, using the Tokyo Valentine archive layout. */
 .brand-mark {
   display: grid;
