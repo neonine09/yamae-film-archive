@@ -44,6 +44,9 @@
 
   let state = { sort: "desc", query: "", visible: 0, filtered: [] };
   let activePost = null;
+  let blobUrl = "";
+  let videoRequest = null;
+  let videoLoadId = 0;
 
   const modal = document.createElement("div");
   modal.className = "preview-modal";
@@ -62,13 +65,15 @@
       <div class="modal-content">
         <div class="modal-player">
           <div class="modal-player-top"><span>ORIGINAL VIDEO</span><span class="live-dot"></span></div>
-          <iframe title="Threads 영상 플레이어" loading="eager" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          <video controls playsinline preload="metadata" crossorigin="anonymous" referrerpolicy="no-referrer"></video>
+          <p class="video-error" hidden>영상을 불러오지 못했습니다. 아래 원문 링크에서 확인하세요.</p>
         </div>
         <div class="modal-details">
           <div class="modal-details-top">
             <span class="modal-details-label">POST CONTENT</span>
             <span class="modal-details-type">VIDEO</span>
           </div>
+          <h3 class="modal-post-title"></h3>
           <p class="modal-caption"></p>
           <div class="modal-details-meta">
             <span class="modal-code"></span>
@@ -139,8 +144,11 @@
     modal.querySelector(".modal-code").textContent = `@yamae.film/post/${post.code}`;
     modal.querySelector(".modal-original").href = post.url;
     const caption = captionFor(post);
+    const parts = caption.split(/(?<=[.!?。！？])\s+|\n+/).filter(Boolean);
+    const title = parts.shift() || `YAMAE.FILM ${postNumber(post)}`;
+    modal.querySelector(".modal-post-title").textContent = title;
     const captionEl = modal.querySelector(".modal-caption");
-    captionEl.textContent = caption || "Threads 원문에서 영상과 전체 게시물 내용을 확인할 수 있습니다.";
+    captionEl.textContent = parts.join("\n\n") || (caption ? "" : "Threads 원문에서 전체 게시물 내용을 확인할 수 있습니다.");
     captionEl.classList.toggle("is-empty", !caption);
   }
 
@@ -150,9 +158,10 @@
     modal.classList.add("is-open");
     document.body.classList.add("modal-open");
     updateModalDetails(post);
-    const iframe = modal.querySelector("iframe");
-    iframe.title = `FILM ${postNumber(post)} Threads 영상 플레이어`;
-    iframe.src = `${post.url}/embed/?hidecaption=1`;
+    const video = modal.querySelector("video");
+    video.poster = thumbnailPath(post);
+    modal.querySelector(".video-error").hidden = true;
+    void loadVideo(post);
     window.setTimeout(() => modal.querySelector(".modal-close")?.focus(), 0);
   }
 
@@ -162,7 +171,60 @@
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("modal-open");
-    modal.querySelector("iframe").src = "about:blank";
+    clearVideo();
+  }
+
+  function clearVideo() {
+    videoLoadId += 1;
+    videoRequest?.abort();
+    videoRequest = null;
+    const video = modal.querySelector("video");
+    video.pause();
+    video.removeAttribute("src");
+    video.load();
+    if (blobUrl) {
+      URL.revokeObjectURL(blobUrl);
+      blobUrl = "";
+    }
+  }
+
+  async function loadVideo(post) {
+    const video = modal.querySelector("video");
+    const videoUrl = window.YAMAE_VIDEO_SOURCES?.[post.code];
+    const requestId = ++videoLoadId;
+    videoRequest?.abort();
+    videoRequest = new AbortController();
+    video.removeAttribute("src");
+    video.load();
+
+    if (!videoUrl) {
+      modal.querySelector(".video-error").hidden = false;
+      videoRequest = null;
+      return;
+    }
+
+    try {
+      const response = await fetch(videoUrl, {
+        headers: { Range: "bytes=0-" },
+        mode: "cors",
+        referrerPolicy: "no-referrer",
+        signal: videoRequest.signal,
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      if (requestId !== videoLoadId || !activePost) return;
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+      blobUrl = URL.createObjectURL(blob);
+      video.src = blobUrl;
+      video.load();
+    } catch (error) {
+      if (error.name === "AbortError" || requestId !== videoLoadId || !activePost) return;
+      video.src = videoUrl;
+      video.load();
+      modal.querySelector(".video-error").hidden = false;
+    } finally {
+      if (requestId === videoLoadId) videoRequest = null;
+    }
   }
 
   function updateTileCaption(article, post) {
@@ -292,6 +354,9 @@
 
   modal.addEventListener("click", (event) => {
     if (event.target.matches("[data-modal-close]")) closePreview();
+  });
+  modal.querySelector("video").addEventListener("error", () => {
+    modal.querySelector(".video-error").hidden = false;
   });
 
   const observer = new IntersectionObserver((entries) => {
