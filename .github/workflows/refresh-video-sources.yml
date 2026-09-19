@@ -2,6 +2,9 @@ name: Threads 영상 주소 자동 갱신
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - "scripts/refresh-video-sources.mjs"
   schedule:
     - cron: "17 */6 * * *"
 

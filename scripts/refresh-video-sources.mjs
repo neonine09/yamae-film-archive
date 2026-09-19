@@ -4,6 +4,7 @@ const postsSource = await fs.readFile("posts.js", "utf8");
 const allEntries = [...postsSource.matchAll(/\["([A-Za-z0-9_-]+)","([^"]+)",(1|0)\]/g)]
   .filter((match) => match[3] === "1")
   .map((match) => match[1]);
+// Always refresh the newest posts first, then rotate through the archive.
 const newest = allEntries.slice(-20).reverse();
 const older = allEntries.slice(0, -20);
 const shift = older.length ? Math.floor(Date.now() / 21_600_000) % older.length : 0;
