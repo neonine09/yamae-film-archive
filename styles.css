@@ -371,3 +371,13 @@ footer{justify-content:space-between;gap:35px;border-top:1px solid var(--line);p
   .brand-mark.small { width: 38px; height: 38px; }
   .hero { margin-top: 9px; }
 }
+
+/* Keep the desktop preview exactly as tall as its video, not its caption. */
+@media (min-width: 851px) {
+  .preview-modal .modal-content { align-items: stretch; overflow: hidden; }
+  .preview-modal .modal-player { align-self: start; overflow: hidden; }
+  .preview-modal .modal-details { height: 100%; min-height: 0; overflow: hidden; padding: 18px 22px; }
+  .preview-modal .modal-caption { display: -webkit-box; flex: 1 1 auto; min-height: 0; overflow: hidden; margin: 10px 0; white-space: pre-wrap; -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
+  .preview-modal .modal-details-meta { flex: 0 0 auto; margin-top: auto; }
+  .preview-modal .modal-original { flex: 0 0 auto; margin-top: 10px; }
+}

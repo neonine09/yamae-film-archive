@@ -162,6 +162,7 @@
     video.poster = thumbnailPath(post);
     modal.querySelector(".video-error").hidden = true;
     void loadVideo(post);
+    requestAnimationFrame(syncModalHeight);
     window.setTimeout(() => modal.querySelector(".modal-close")?.focus(), 0);
   }
 
@@ -171,8 +172,23 @@
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("modal-open");
+    modal.querySelector(".modal-content").style.height = "";
     clearVideo();
   }
+
+  function syncModalHeight() {
+    const content = modal.querySelector(".modal-content");
+    if (!activePost || window.matchMedia("(max-width: 850px)").matches) {
+      content.style.height = "";
+      return;
+    }
+    const player = modal.querySelector(".modal-player");
+    const top = player.querySelector(".modal-player-top");
+    const video = player.querySelector("video");
+    content.style.height = `${Math.ceil(top.getBoundingClientRect().height + video.getBoundingClientRect().height)}px`;
+  }
+
+  window.addEventListener("resize", syncModalHeight);
 
   function clearVideo() {
     videoLoadId += 1;
@@ -363,6 +379,7 @@
     const video = event.currentTarget;
     if (video.videoWidth && video.videoHeight) {
       video.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+      requestAnimationFrame(syncModalHeight);
     }
   });
 
