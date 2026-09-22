@@ -112,7 +112,9 @@ footer{justify-content:space-between;gap:35px;border-top:1px solid var(--line);p
   border-top: 1px solid var(--line);
 }
 .preview-modal .modal-player {
-  display: block;
+  display: flex;
+  align-self: stretch;
+  flex-direction: column;
   min-width: 0;
   min-height: 0;
   width: auto;
@@ -128,7 +130,10 @@ footer{justify-content:space-between;gap:35px;border-top:1px solid var(--line);p
   display: block;
   width: 100%;
   height: auto;
+  min-height: 0;
   max-height: 68vh;
+  aspect-ratio: 16 / 9;
+  flex: 0 0 auto;
   margin: 0;
   background: #000;
   object-fit: contain;

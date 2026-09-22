@@ -180,6 +180,7 @@
     videoRequest = null;
     const video = modal.querySelector("video");
     video.pause();
+    video.style.aspectRatio = "";
     video.removeAttribute("src");
     video.load();
     if (blobUrl) {
@@ -357,6 +358,12 @@
   });
   modal.querySelector("video").addEventListener("error", () => {
     modal.querySelector(".video-error").hidden = false;
+  });
+  modal.querySelector("video").addEventListener("loadedmetadata", (event) => {
+    const video = event.currentTarget;
+    if (video.videoWidth && video.videoHeight) {
+      video.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+    }
   });
 
   const observer = new IntersectionObserver((entries) => {
