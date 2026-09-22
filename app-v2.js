@@ -185,7 +185,7 @@
     const player = modal.querySelector(".modal-player");
     const top = player.querySelector(".modal-player-top");
     const video = player.querySelector("video");
-    content.style.height = `${Math.ceil(top.getBoundingClientRect().height + video.getBoundingClientRect().height)}px`;
+    content.style.height = `${Math.ceil(top.getBoundingClientRect().height + video.getBoundingClientRect().height + 12)}px`;
   }
 
   window.addEventListener("resize", syncModalHeight);
