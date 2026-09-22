@@ -156,6 +156,14 @@ footer{justify-content:space-between;gap:35px;border-top:1px solid var(--line);p
   line-height: 1.4;
   letter-spacing: -.04em;
 }
+.preview-modal .modal-caption {
+  display: -webkit-box;
+  overflow: hidden;
+  max-height: 19.25em;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 11;
+  text-overflow: ellipsis;
+}
 .preview-modal .modal-caption { min-height: 100px; margin: 0; }
 .preview-modal .modal-details-meta { margin-top: 22px; }
 @media (max-width: 850px) {
@@ -168,6 +176,10 @@ footer{justify-content:space-between;gap:35px;border-top:1px solid var(--line);p
   .preview-modal { padding: 12px; }
   .preview-modal .modal-panel { max-height: calc(100vh - 24px); border-radius: 16px; }
   .preview-modal .modal-details { padding: 18px; }
+  .preview-modal .modal-caption {
+    max-height: 10.4em;
+    -webkit-line-clamp: 8;
+  }
 }
 /* Keep the preview modal inside the viewport while preserving the 16:9 player. */
 .preview-modal .modal-player iframe {
