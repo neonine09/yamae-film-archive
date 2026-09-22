@@ -138,6 +138,7 @@ footer{justify-content:space-between;gap:35px;border-top:1px solid var(--line);p
   background: #000;
   object-fit: contain;
 }
+.preview-modal .modal-player video[src] { cursor: pointer; }
 .preview-modal .video-error {
   margin: 0;
   padding: 14px 17px;
