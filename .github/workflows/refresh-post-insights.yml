@@ -1,0 +1,53 @@
+name: Threads 원본 조회수 갱신
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/refresh-post-insights.yml"
+      - "scripts/refresh-post-insights.mjs"
+  schedule:
+    - cron: "43 2 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: yamae-refresh-post-insights
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Insights 권한 확인
+        id: auth
+        shell: bash
+        run: |
+          if [ -z "$THREADS_ACCESS_TOKEN" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "THREADS_ACCESS_TOKEN Secret이 없어 조회수 갱신을 건너뛰었습니다." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: 원본 조회수 및 인용·리포스트 여부 갱신
+        if: steps.auth.outputs.configured == 'true'
+        run: node scripts/refresh-post-insights.mjs
+      - name: 공개 데이터 저장
+        if: steps.auth.outputs.configured == 'true'
+        shell: bash
+        run: |
+          if git diff --quiet -- post-insights.json; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- post-insights.json
+          git commit -m "Refresh Threads post insights"
+          git pull --rebase origin main
+          git push

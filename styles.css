@@ -382,3 +382,18 @@ footer{justify-content:space-between;gap:35px;border-top:1px solid var(--line);p
   .preview-modal .modal-details-meta { flex: 0 0 auto; margin-top: auto; }
   .preview-modal .modal-original { flex: 0 0 auto; margin-top: 10px; }
 }
+
+.segment[hidden], .tile-views[hidden] { display: none; }
+.tile-views {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 999px;
+  background: rgba(5,8,12,.75);
+  padding: 5px 8px;
+  color: #f5f8fa;
+  font-size: 10px;
+  font-weight: 700;
+}

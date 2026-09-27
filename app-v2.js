@@ -23,6 +23,7 @@
       sourceNumber: post.number,
       number: index + 1,
       caption: "",
+      views: null,
     }));
   const postByCode = new Map(posts.map((post) => [post.code, post]));
 
@@ -135,6 +136,8 @@
         .some((value) => value.toLowerCase().includes(q));
     });
     if (state.sort === "desc") result = [...result].reverse();
+    if (state.sort === "views") result = [...result].sort((a, b) =>
+      (b.views ?? -1) - (a.views ?? -1) || b.number - a.number);
     return result;
   }
 
@@ -144,6 +147,8 @@
     modal.querySelector(".modal-date-bottom").textContent = formatDate(post.date);
     modal.querySelector(".modal-code").textContent = `@yamae.film/post/${post.code}`;
     modal.querySelector(".modal-original").href = post.url;
+    modal.querySelector(".modal-details-type").textContent = Number.isFinite(post.views)
+      ? `조회 ${post.views.toLocaleString("ko-KR")}` : "VIDEO";
     const caption = captionFor(post);
     const parts = caption.split(/(?<=[.!?。！？])\s+|\n+/).filter(Boolean);
     const title = parts.shift() || `YAMAE.FILM ${postNumber(post)}`;
@@ -271,6 +276,7 @@
         <img loading="lazy" alt="FILM ${postNumber(post)} 영상 썸네일" />
         <span class="tile-shade"></span>
         <span class="tile-index">${postNumber(post)}</span>
+        <span class="tile-views" hidden></span>
         ${hoverPreviewMarkup}
         <span class="tile-play"><i></i></span>
         <span class="tile-hover-label">미리보기</span>
@@ -291,6 +297,11 @@
 
     const image = article.querySelector("img");
     image.src = thumbnailPath(post);
+    const viewsBadge = article.querySelector(".tile-views");
+    if (Number.isFinite(post.views)) {
+      viewsBadge.textContent = `조회 ${post.views.toLocaleString("ko-KR")}`;
+      viewsBadge.hidden = false;
+    }
     image.addEventListener("error", () => {
       image.removeAttribute("src");
       article.classList.add("no-thumbnail");
@@ -333,7 +344,8 @@
 
   function applyControls() {
     state.filtered = filteredPosts();
-    sortLabel.textContent = state.sort === "asc" ? "오래된 순" : "최신 순";
+    sortLabel.textContent = state.sort === "asc" ? "오래된 순"
+      : state.sort === "views" ? "조회수 높은 순" : "최신 순";
     render(true);
   }
 
@@ -405,6 +417,36 @@
       });
       applyTileCaptions();
       if (state.query) applyControls();
+      if (activePost) updateModalDetails(activePost);
+    })
+    .catch(() => {});
+
+  fetch("./post-insights.json", { cache: "no-store" })
+    .then((response) => response.ok ? response.json() : null)
+    .then((insights) => {
+      if (!insights || typeof insights !== "object") return;
+      const excluded = new Set(Array.isArray(insights.excludedCodes) ? insights.excludedCodes : []);
+      if (excluded.size) {
+        posts.splice(0, posts.length, ...posts.filter((post) => !excluded.has(post.code)));
+        postByCode.clear();
+        posts.forEach((post, index) => {
+          post.number = index + 1;
+          postByCode.set(post.code, post);
+        });
+        if (activePost && excluded.has(activePost.code)) closePreview();
+      }
+      const views = insights.views && typeof insights.views === "object" ? insights.views : {};
+      posts.forEach((post) => {
+        const count = views[post.code];
+        post.views = Number.isSafeInteger(count) && count >= 0 ? count : null;
+      });
+      const hasViews = posts.some((post) => post.views !== null);
+      document.querySelector('[data-sort="views"]').hidden = !hasViews;
+      if (!hasViews && state.sort === "views") state.sort = "desc";
+      document.querySelectorAll("[data-sort]").forEach((item) =>
+        item.classList.toggle("is-active", item.dataset.sort === state.sort));
+      updateStats();
+      applyControls();
       if (activePost) updateModalDetails(activePost);
     })
     .catch(() => {});

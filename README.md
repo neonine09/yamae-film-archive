@@ -20,6 +20,7 @@ YAMAE.FILM의 공개 Threads 영상 게시물만 모아 최신 영상부터 감�
 - 게시물 내용·날짜·원문 링크는 영상 아래에 배치
 - 공식 Threads 임베드 기반 원본 영상 재생
 - 첫 화면 최신순 로딩, 과거순/최신순 전환, 번호·날짜·게시물 코드·내용 검색
+- Threads Insights 연결 후 게시물별 원본 조회수 표시와 조회수 높은 순 정렬
 
 ## 로컬 실행
 
@@ -40,3 +41,9 @@ python -m http.server 4173
 ## GitHub Pages
 
 저장소 루트의 정적 파일을 `main` 브랜치에서 GitHub Pages로 제공하면 별도 빌드 없이 공개할 수 있습니다. `.nojekyll` 파일이 포함되어 있어 `thumbs/`의 정적 경로가 그대로 유지됩니다.
+
+## 원본 조회수와 인용·리포스트 제외
+
+Threads 원본 조회수는 공개 게시물 HTML에 제공되지 않습니다. `@yamae.film` 계정의 `threads_basic` 및 `threads_manage_insights` 권한이 포함된 Threads 사용자 액세스 토큰을 GitHub 저장소 Secret `THREADS_ACCESS_TOKEN`으로 등록해야 합니다. 토큰은 공개 사이트 파일에 넣지 마세요.
+
+등록 후 Actions의 **Threads 원본 조회수 갱신**을 한 번 실행하면 `post-insights.json`에 게시물별 조회수와 인용·리포스트 제외 코드가 저장됩니다. 이후 매일 자동 갱신합니다. 데이터가 없을 때는 조회수 숫자와 정렬 버튼을 표시하지 않습니다. 토큰이 없거나 만료되면 마지막으로 확인된 값만 유지합니다.
