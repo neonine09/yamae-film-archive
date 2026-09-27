@@ -46,6 +46,8 @@ try {
   const previous = await fs.readFile("video-sources.js", "utf8");
   sources = JSON.parse(previous.slice(previous.indexOf("=") + 1).replace(/;\s*$/, ""));
 } catch {}
+const activeCodes = new Set(allEntries);
+sources = Object.fromEntries(Object.entries(sources).filter(([code]) => activeCodes.has(code)));
 const refreshed = new Set();
 const concurrency = 8;
 let cursor = 0;

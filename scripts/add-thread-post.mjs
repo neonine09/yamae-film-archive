@@ -113,7 +113,7 @@ if (!/<video\b[^>]*>\s*<source\b/i.test(embedBody)) {
 // reject it before touching archive files.
 const linkedPostCodes = [...embedBody.matchAll(/(?:threads\.com|threads\.net)\/(?:&#064;|@)[^/\s"']+\/post\/([A-Za-z0-9_-]+)/gi)].map((match) => match[1]);
 if (!linkedPostCodes.length || linkedPostCodes.some((code) => code !== postCode)
-    || /class="[^"]*(?:QuotedPost|QuotePost|RepostedPost|RepostAttribution)[^"]*"/i.test(embedBody)) {
+    || /class="[^"]*(?:QuotePostContainer|QuotedPost|QuotePost|RepostedPost|RepostAttribution)[^"]*"/i.test(embedBody)) {
   throw new Error("리포스트·인용 게시물이거나 원본 여부를 확인할 수 없어 등록하지 않았습니다.");
 }
 if (process.env.THREADS_VALIDATE_ONLY === "1") {
@@ -138,7 +138,7 @@ if (metadata.some((post) => post.code === postCode)) {
   process.exit(0);
 }
 
-const sourceNumber = metadata.length + 1;
+const sourceNumber = Math.max(0, ...metadata.map((post) => Number(post.number) || 0)) + 1;
 const postDate = metaContent(html, "article:published_time") || shortcodeTimestamp(postCode);
 const thumbnailName = `${String(sourceNumber).padStart(3, "0")}.jpg`;
 const thumbnailPath = path.join(thumbsDir, thumbnailName);
