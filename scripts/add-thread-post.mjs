@@ -73,7 +73,7 @@ function shortcodeTimestamp(code) {
 }
 
 const postsSource = await fs.readFile(postsPath, "utf8");
-if (postsSource.includes(`"${postCode}"`)) {
+if (process.env.THREADS_VALIDATE_ONLY !== "1" && postsSource.includes(`"${postCode}"`)) {
   console.log(`이미 등록된 게시물입니다: ${postCode}`);
   process.exit(0);
 }
@@ -86,6 +86,40 @@ const pageResponse = await fetchWithRetry(`${postUrl}?hl=ko`, {
 });
 const html = await pageResponse.text();
 if (/Thread not available/i.test(html)) throw new Error("공개되지 않았거나 사용할 수 없는 게시물입니다.");
+
+// Only the permalink route flag describes the requested post; other flags can
+// belong to related posts included in the response.
+const routeFlags = [...html.matchAll(/"is_self_post":(?:true|false),"is_reply":(true|false),"is_close_threads":(?:true|false)/g)];
+if (!routeFlags.length || routeFlags.some((flag) => flag[1] !== routeFlags[0][1])) {
+  throw new Error("게시물 유형을 확인하지 못해 등록하지 않았습니다.");
+}
+if (routeFlags[0][1] === "true") throw new Error("댓글 게시물은 등록할 수 없습니다.");
+
+if (metaContent(html, "og:url") !== postUrl) {
+  throw new Error("원본 작성자 또는 게시물 주소가 일치하지 않아 등록하지 않았습니다.");
+}
+
+const embedResponse = await fetchWithRetry(`${postUrl}/embed/?hidecaption=1`, {
+  headers: { "user-agent": "Mozilla/5.0", accept: "text/html,application/xhtml+xml" },
+});
+const embedHtml = await embedResponse.text();
+const bodyStart = embedHtml.indexOf("<body");
+const bodyEnd = embedHtml.indexOf("</body>");
+const embedBody = bodyStart >= 0 ? embedHtml.slice(bodyStart, bodyEnd > bodyStart ? bodyEnd + 7 : undefined) : "";
+if (!/<video\b[^>]*>\s*<source\b/i.test(embedBody)) {
+  throw new Error("원본 영상이 확인되지 않아 등록하지 않았습니다.");
+}
+// A quote/repost embeds another post. If its identity cannot be confirmed,
+// reject it before touching archive files.
+const linkedPostCodes = [...embedBody.matchAll(/(?:threads\.com|threads\.net)\/(?:&#064;|@)[^/\s"']+\/post\/([A-Za-z0-9_-]+)/gi)].map((match) => match[1]);
+if (!linkedPostCodes.length || linkedPostCodes.some((code) => code !== postCode)
+    || /class="[^"]*(?:QuotedPost|QuotePost|RepostedPost|RepostAttribution)[^"]*"/i.test(embedBody)) {
+  throw new Error("리포스트·인용 게시물이거나 원본 여부를 확인할 수 없어 등록하지 않았습니다.");
+}
+if (process.env.THREADS_VALIDATE_ONLY === "1") {
+  console.log(`원본 영상 게시물 확인: ${postCode}`);
+  process.exit(0);
+}
 
 const imageUrlText = metaContent(html, "og:image");
 const description = metaContent(html, "og:description").trim().replace(/\s+/g, " ");
