@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
+      - "posts.js"
       - ".github/workflows/refresh-post-insights.yml"
       - "scripts/refresh-post-insights.mjs"
   schedule:
