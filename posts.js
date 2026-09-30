@@ -364,15 +364,32 @@
     ["Ddx1s2Jibw7","2026-09-27T05:17:09.740Z",1],
     ["DdyRllciV70","2026-09-27T09:20:50.322Z",1],
     ["DdyiYwvCai6","2026-09-27T11:47:38.167Z",1],
-    ["Ddyyb2PjyFS","2026-09-27T14:07:52.056Z",1],["Dd4o0-zCXHC","2026-09-29T20:39:21.663Z",1],["Dd5YAnQj4HA","2026-09-30T03:31:38.490Z",1],["Dd5-f5ZCV_A","2026-09-30T09:07:57.707Z",1]
+    ["Ddyyb2PjyFS","2026-09-27T14:07:52.056Z",1],
+    ["Dd0AxqGCbGI","2026-09-28T01:32:25.189Z",1],
+    ["Dd0HcqnCf2W","2026-09-28T02:30:43.239Z",1],
+    ["Dd0qtHPidT9","2026-09-28T07:38:48.056Z",1],
+    ["Dd1AwzoieJ6","2026-09-28T10:51:32.650Z",1],
+    ["Dd1ZHGACfiq","2026-09-28T14:24:18.137Z",1],
+    ["Dd24geMiaYX","2026-09-29T04:17:53.394Z",1],
+    ["Dd3S0E9iT40","2026-09-29T08:07:45.492Z",1],
+    ["Dd3n5YYj6gD","2026-09-29T11:11:58.986Z",1],
+    ["Dd4o0-zCXHC","2026-09-29T20:39:21.663Z",1],
+    ["Dd5YAnQj4HA","2026-09-30T03:31:38.490Z",1],
+    ["Dd5-f5ZCV_A","2026-09-30T09:07:57.707Z",1]
   ];
 
+  const sourceNumbers = {
+    Dd0AxqGCbGI: 370, Dd0HcqnCf2W: 371, Dd0qtHPidT9: 372,
+    Dd1AwzoieJ6: 373, Dd1ZHGACfiq: 374, Dd24geMiaYX: 375,
+    Dd3S0E9iT40: 376, Dd3n5YYj6gD: 377, "Dd4o0-zCXHC": 367,
+    Dd5YAnQj4HA: 368, "Dd5-f5ZCV_A": 369,
+  };
   window.YAMAE_POSTS = raw.map(([code, date, video], index) => ({
     code,
     date,
     video: Boolean(video),
     // Keep thumbnail source numbers stable after removing quoted FILM302.
-    number: index + 1 + (index >= 363 ? 1 : 0),
+    number: sourceNumbers[code] ?? index + 1 + (index >= 363 ? 1 : 0),
     url: `https://www.threads.com/@yamae.film/post/${code}`,
   }));
 })();
