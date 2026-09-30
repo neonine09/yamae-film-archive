@@ -89,7 +89,7 @@ if (/Thread not available/i.test(html)) throw new Error("공개되지 않았거�
 
 // Only the permalink route flag describes the requested post; other flags can
 // belong to related posts included in the response.
-const routeFlags = [...html.matchAll(/"is_self_post":(?:true|false),"is_reply":(true|false),"is_close_threads":(?:true|false)/g)];
+const routeFlags = [...html.matchAll(/"is_self_post":(?:true|false),[^{}]{0,240}"is_reply":(true|false)/g)];
 if (!routeFlags.length || routeFlags.some((flag) => flag[1] !== routeFlags[0][1])) {
   throw new Error("게시물 유형을 확인하지 못해 등록하지 않았습니다.");
 }
