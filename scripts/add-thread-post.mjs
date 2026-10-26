@@ -16,6 +16,7 @@ const postCode = pathMatch[1];
 const postUrl = `https://www.threads.com/@yamae.film/post/${postCode}`;
 const postsPath = path.resolve("posts.js");
 const metaPath = path.resolve("post-meta.json");
+const htmlPath = path.resolve("index.html");
 const thumbsDir = path.resolve("thumbs");
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -155,7 +156,7 @@ if (imageBytes.byteLength === 0 || imageBytes.byteLength > 15 * 1024 * 1024) {
 const arrayEndPattern = /\r?\n  \];/g;
 if ([...postsSource.matchAll(arrayEndPattern)].length !== 1) throw new Error("posts.js 배열 끝을 정확히 찾지 못했습니다.");
 const newline = postsSource.includes("\r\n") ? "\r\n" : "\n";
-const updatedPosts = postsSource.replace(arrayEndPattern, `,["${postCode}","${postDate}",1]${newline}  ];`);
+const updatedPosts = postsSource.replace(arrayEndPattern, `,${newline}    ["${postCode}","${postDate}",1]${newline}  ];`);
 metadata.push({
   code: postCode,
   date: postDate,
@@ -167,10 +168,14 @@ metadata.push({
 });
 
 await fs.mkdir(thumbsDir, { recursive: true });
+const indexHtml = await fs.readFile(htmlPath, "utf8");
+const updatedHtml = indexHtml.replace(/\.\/posts\.js\?v=[^" ]+/, `./posts.js?v=add-${Date.now()}`);
+if (updatedHtml === indexHtml) throw new Error("index.html의 게시물 캐시 태그를 찾지 못했습니다.");
 await Promise.all([
   fs.writeFile(postsPath, updatedPosts, "utf8"),
   fs.writeFile(metaPath, `${JSON.stringify(metadata, null, 2)}\n`, "utf8"),
   fs.writeFile(thumbnailPath, imageBytes),
+  fs.writeFile(htmlPath, updatedHtml, "utf8"),
 ]);
 console.log(`추가 완료: ${postCode}`);
 console.log(`원본 번호: ${sourceNumber}`);

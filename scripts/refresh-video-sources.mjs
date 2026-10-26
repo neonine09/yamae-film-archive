@@ -3,7 +3,9 @@ import fs from "node:fs/promises";
 const postsSource = await fs.readFile("posts.js", "utf8");
 const allEntries = [...postsSource.matchAll(/\["([A-Za-z0-9_-]+)","([^"]+)",(1|0)\]/g)]
   .filter((match) => match[3] === "1")
-  .map((match) => match[1]);
+  .map((match) => ({ code: match[1], date: match[2] }))
+  .sort((a, b) => Date.parse(a.date) - Date.parse(b.date) || a.code.localeCompare(b.code))
+  .map((post) => post.code);
 // Always refresh the newest posts first, then rotate through the archive.
 const newest = allEntries.slice(-20).reverse();
 const older = allEntries.slice(0, -20);
@@ -42,9 +44,10 @@ async function fetchSource(code) {
 }
 
 let sources = {};
+let previousSource = "";
 try {
-  const previous = await fs.readFile("video-sources.js", "utf8");
-  sources = JSON.parse(previous.slice(previous.indexOf("=") + 1).replace(/;\s*$/, ""));
+  previousSource = await fs.readFile("video-sources.js", "utf8");
+  sources = JSON.parse(previousSource.slice(previousSource.indexOf("=") + 1).replace(/;\s*$/, ""));
 } catch {}
 const activeCodes = new Set(allEntries);
 sources = Object.fromEntries(Object.entries(sources).filter(([code]) => activeCodes.has(code)));
@@ -65,5 +68,11 @@ async function worker() {
 await Promise.all(Array.from({ length: concurrency }, worker));
 
 const output = `// Generated automatically from public Threads embeds.\nwindow.YAMAE_VIDEO_SOURCES = ${JSON.stringify(sources, null, 2)};\n`;
-await fs.writeFile("video-sources.js", output, "utf8");
+if (output !== previousSource) {
+  await fs.writeFile("video-sources.js", output, "utf8");
+  const html = await fs.readFile("index.html", "utf8");
+  const updated = html.replace(/\.\/video-sources\.js\?v=[^" ]+/, `./video-sources.js?v=refresh-${Date.now()}`);
+  if (updated === html) throw new Error("index.html의 영상 주소 캐시 태그를 찾지 못했습니다.");
+  await fs.writeFile("index.html", updated, "utf8");
+}
 console.log(`영상 주소 ${refreshed.size}/${entries.length}개 갱신, 총 ${Object.keys(sources).length}개 저장 완료`);

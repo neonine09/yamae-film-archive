@@ -18,6 +18,7 @@
   ]);
   const posts = sourcePosts
     .filter((post) => Boolean(post.video) && !unavailablePostCodes.has(post.code))
+    .sort((a, b) => Date.parse(a.date) - Date.parse(b.date) || a.code.localeCompare(b.code))
     .map((post, index) => ({
       ...post,
       sourceNumber: post.number,

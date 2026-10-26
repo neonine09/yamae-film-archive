@@ -1,0 +1,52 @@
+name: Threads 원본 영상 자동 동기화
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/sync-thread-posts.mjs"
+      - ".github/workflows/sync-thread-posts.yml"
+  schedule:
+    - cron: "23 */3 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: yamae-content-writes
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: API 연결 확인
+        shell: bash
+        run: |
+          if [ -z "$THREADS_ACCESS_TOKEN" ]; then
+            echo "THREADS_ACCESS_TOKEN 저장소 Secret이 없어 동기화하지 못했습니다." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+      - name: 전체 게시물 페이지를 확인하고 원본 영상 추가
+        run: node scripts/sync-thread-posts.mjs
+      - name: 변경사항 저장 및 배포
+        shell: bash
+        run: |
+          if git diff --quiet -- posts.js post-meta.json video-sources.js index.html &&
+             [ -z "$(git ls-files --others --exclude-standard -- thumbs/)" ]; then
+            echo "새 원본 영상 없음 — 전체 Threads 목록 확인 완료." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- posts.js post-meta.json video-sources.js index.html thumbs/
+          git commit -m "Sync original Threads videos"
+          git pull --rebase origin main
+          git push origin HEAD:main
